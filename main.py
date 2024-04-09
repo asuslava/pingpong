@@ -40,9 +40,9 @@ ball = Object('ball.png', 435, 255, (40, 40))
 ball_speed_x = 4
 ball_speed_y = 4
 
-number_font = pygame.font.Font('C://Users//Lis//OneDrive//Рабочий стол//fonts//G7_Segment_7a.ttf', 100)
-titule_font = pygame.font.Font('C://Users//Lis//OneDrive//Рабочий стол//fonts//mc-ten-lowercase-alt.ttf', 80)
-restart_font = pygame.font.Font('C://Users//Lis//OneDrive//Рабочий стол//fonts//Pareidolia.ttf', 25)
+number_font = pygame.font.Font('C://Users//Lis//OneDrive//Documents//GitHub//pingpong//fonts//G7_Segment_7a.ttf', 100)
+titule_font = pygame.font.Font('C://Users//Lis//OneDrive//Documents//GitHub//pingpong//fonts//mc-ten-lowercase-alt.ttf', 80)
+restart_font = pygame.font.Font('C://Users//Lis//OneDrive//Documents//GitHub//pingpong//fonts//Pareidolia.ttf', 25)
 
 winner_txt = titule_font.render('WINNER', True, WHITE)
 loser_txt = titule_font.render('LOSER', True, LIGHT_GREY)
@@ -104,16 +104,16 @@ while game:
             ball.rect.x = 435
             ball.rect.y = 255
 
-        if racket_one.points >= 2:
+        if racket_one.points >= 10:
             mw.blit(winner_txt, (97, 190))
             finish = True
-        elif racket_two.points == 2:
+        elif racket_two.points == 10:
             mw.blit(loser_txt, (100, 190))
 
-        if racket_two.points >= 2:
+        if racket_two.points >= 10:
             mw.blit(winner_txt, (518, 190))
             finish = True
-        elif racket_one.points == 2:
+        elif racket_one.points == 10:
             mw.blit(loser_txt, (555, 190))
             
     else:
