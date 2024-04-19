@@ -11,18 +11,49 @@ LIGHT_GREY = (192, 192, 192)
 mw = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('PingPong')
 
-class Object:
+class Sprite:
 
-    points = 0
-
-    def __init__(self, object_image, object_x, object_y, object_size):
-        self.image = pygame.transform.scale(pygame.image.load(object_image).convert_alpha(), object_size)
+    def __init__(self, sprite_image, sprite_x, sprite_y, sprite_size):
+        self.image = pygame.transform.scale(pygame.image.load(sprite_image).convert_alpha(), sprite_size)
         self.rect = self.image.get_rect()
-        self.rect.x = object_x
-        self.rect.y = object_y
+        self.rect.x = sprite_x
+        self.rect.y = sprite_y
 
     def draw(self):
         mw.blit(self.image, (self.rect.x, self.rect.y))
+
+
+class Racket(Sprite):
+
+    points = 0
+
+    def update_left(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w] and self.rect.y > 20:
+            self.rect.y -= 5
+        if keys[pygame.K_s] and self.rect.y < 375:
+            self.rect.y += 5
+
+    def update_right(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] and self.rect.y > 20:
+            self.rect.y -= 5
+        if keys[pygame.K_DOWN] and self.rect.y < 375:
+            self.rect.y += 5
+
+
+class Ball(Sprite):
+
+    def update_ball(self):
+        if self.rect.x >= 860:
+            racket_one.points += 1
+            self.rect.x = 435
+            self.rect.y = 255
+
+        if self.rect.x <= -5:
+            racket_two.points += 1
+            self.rect.x = 435
+            self.rect.y = 255
 
 
 def render_score(racket): 
@@ -33,16 +64,17 @@ def render_score(racket):
         result = str(racket.points)
     return number_font.render(result, True, LIGHT_GREY)
 
-racket_one = Object('white line.jpg', 20, 185, (20, 150))
-racket_two = Object('white line.jpg', 860, 185, (20, 150))
-center = Object('grey line.png', 440, 0, (25, 550))
-ball = Object('ball.png', 435, 255, (40, 40))
+
+racket_one = Racket('white line.jpg', 20, 185, (20, 150))
+racket_two = Racket('white line.jpg', 860, 185, (20, 150))
+center = Sprite('grey line.png', 440, 0, (25, 550))
+ball = Ball('ball.png', 435, 255, (40, 40))
 ball_speed_x = 4
 ball_speed_y = 4
 
-number_font = pygame.font.Font('C://Users//Lis//OneDrive//Documents//GitHub//pingpong//fonts//G7_Segment_7a.ttf', 100)
-titule_font = pygame.font.Font('C://Users//Lis//OneDrive//Documents//GitHub//pingpong//fonts//mc-ten-lowercase-alt.ttf', 80)
-restart_font = pygame.font.Font('C://Users//Lis//OneDrive//Documents//GitHub//pingpong//fonts//Pareidolia.ttf', 25)
+number_font = pygame.font.Font('fonts//G7_Segment_7a.ttf', 100)
+titule_font = pygame.font.Font('fonts//mc-ten-lowercase-alt.ttf', 80)
+restart_font = pygame.font.Font('fonts//Pareidolia.ttf', 25)
 
 winner_txt = titule_font.render('WINNER', True, WHITE)
 loser_txt = titule_font.render('LOSER', True, LIGHT_GREY)
@@ -72,15 +104,9 @@ while game:
         border_one = pygame.draw.rect(mw, WHITE, pygame.Rect(0, 0, 900, 15))
         border_two = pygame.draw.rect(mw, WHITE, pygame.Rect(0, 535, 900, 15))
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w] and racket_one.rect.y > 20:
-            racket_one.rect.y -= 5
-        if keys[pygame.K_s] and racket_one.rect.y < 375:
-            racket_one.rect.y += 5
-        if keys[pygame.K_UP] and racket_two.rect.y > 20:
-            racket_two.rect.y -= 5
-        if keys[pygame.K_DOWN] and racket_two.rect.y < 375:
-            racket_two.rect.y += 5
+        racket_one.update_left()
+        racket_two.update_right()
+        ball.update_ball()
 
         ball.rect.x += ball_speed_x
         ball.rect.y += ball_speed_y
@@ -93,16 +119,6 @@ while game:
             ball_speed_x *= -1
         if ball.rect.colliderect(racket_two.rect):
             ball_speed_x *= -1
-
-        if ball.rect.x >= 860:
-            racket_one.points += 1
-            ball.rect.x = 435
-            ball.rect.y = 255
-
-        if ball.rect.x <= -5:
-            racket_two.points += 1
-            ball.rect.x = 435
-            ball.rect.y = 255
 
         if racket_one.points >= 10:
             mw.blit(winner_txt, (97, 190))
